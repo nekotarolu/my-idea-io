@@ -1,10 +1,12 @@
 ﻿import datetime
 import os
 import sqlite3
-from bottle import route, request, abort, run, response
+from bottle import route, request, abort, run, response, template, TEMPLATE_PATH
 
 import config
 import model
+
+TEMPLATE_PATH.append("./template")
 
 @route("/")
 def welcome_service():
@@ -20,6 +22,12 @@ def welcome_service():
 
         response.headers['Access-Control-Allow-Origin'] = '*'
         return "Welcome to the MyIdea-IO!!"
+
+
+@route("/top")
+def top_page():
+        test = "hogehoge"
+        return template("top.html", test=test)
 
 
 if __name__ == "__main__":
