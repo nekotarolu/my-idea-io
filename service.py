@@ -1,7 +1,7 @@
 ﻿import datetime
 import os
 import sqlite3
-from bottle import route, request, abort, run, response, template, TEMPLATE_PATH
+from bottle import route, request, abort, run, response, static_file, template, TEMPLATE_PATH
 
 import config
 import model
@@ -28,6 +28,11 @@ def welcome_service():
 def top_page():
         test = "hogehoge"
         return template("top.html", test=test)
+
+
+@route("/files/<file_path:path>")
+def ret_files(file_path):
+        return static_file(file_path, root="./static")
 
 
 if __name__ == "__main__":
