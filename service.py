@@ -21,10 +21,10 @@ def welcome_service():
                 print("-- database setup failed --")
 
         response.headers['Access-Control-Allow-Origin'] = '*'
-        return "Welcome to the MyIdea-IO!!"
+        return template("top.html", test="to the start page...")
 
 
-@route("/top")
+@route("/start")
 def top_page():
         test = "hogehoge"
         return template("top.html", test=test)
