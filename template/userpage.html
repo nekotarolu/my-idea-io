@@ -15,7 +15,42 @@
 
 <body>
     <h1>Welcome to the MyIdea-IO!!</h1>
-    userpage.
+    <h2>ここは {{userId}} さんのページです</h2>
+    <hr />
+
+    <h3>インプットリスト</h3>
+    <table border="1">
+    %for input in inputList:
+        <tr>
+            <td>{{input["inText"]}}</td>
+            <td>{{input["createDate"]}}</td>
+            <td><a href="/input_delete/{{input["inText"]}}?userId={{userId}}">削除</a></td>
+        </tr>
+    %end
+    </table>
+    <h3>インプットを入力してください</h3>
+    <form method="post" action="/input_regist?userId={{userId}}">
+      <p>インプット：<input type="text" name="inputText"></p>
+      <p><input type="submit" value="登録する"></p>
+    </form>  
+  
+    <hr />
+
+    <h3>アウトプットリスト</h3>
+    <table border="1">
+    %for output in outputList:
+        <tr>
+            <td>{{output["outText"]}}</td>
+            <td>{{output["createDate"]}}</td>
+            <td><a href="/output_delete/{{output["outText"]}}?userId={{userId}}">削除</a></td>
+        </tr>
+    %end
+    </table>
+    <form method="post" action="/output_regist?userId={{userId}}">
+      <p>アウトプット：<input type="text" name="outputText"></p>
+      <p><input type="submit" value="登録する"></p>
+    </form>
+
 </body>
 
 </html>
