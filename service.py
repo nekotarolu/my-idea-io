@@ -42,7 +42,27 @@ def user_create():
         if retVal is False:
                 redirect("/start?user=faild")
         else:
-                redirect("/start?user=success")
+                redirect("/user?userId=" + userName)
+
+
+@route("/user_login", method=['POST'])
+def user_create():
+        print("NAK::user create in")
+        userName = request.forms.get("userId")
+        print(userName)
+        now = datetime.datetime.now()
+        print(now)
+        retVal = model.getUserInfo(userName)
+        if retVal is None:
+                redirect("/start?user=faild")
+        else:
+                redirect("/user?userId=" + userName)
+
+
+@route("/user")
+def user_page():
+        test = "hogehoge"
+        return template("userpage.html", test=test)
 
 
 @route("/files/<file_path:path>")
