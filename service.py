@@ -1,10 +1,11 @@
 ﻿import datetime
 import os
 import sqlite3
-from bottle import route, request, abort, run, response, static_file, template, TEMPLATE_PATH
+from bottle import route, request, abort, run, response, redirect, static_file, template, TEMPLATE_PATH
 
 import config
 import model
+import sys
 
 TEMPLATE_PATH.append("./template")
 
@@ -27,7 +28,21 @@ def welcome_service():
 @route("/start")
 def top_page():
         test = "hogehoge"
-        return template("top.html", test=test)
+        return template("start.html", test=test)
+
+
+@route("/user_create", method=['POST'])
+def user_create():
+        print("NAK::user create in")
+        userName = request.forms.get("userId")
+        print(userName)
+        now = datetime.datetime.now()
+        print(now)
+        retVal = model.registUser(userName, now)
+        if retVal is False:
+                redirect("/start?user=faild")
+        else:
+                redirect("/start?user=success")
 
 
 @route("/files/<file_path:path>")
