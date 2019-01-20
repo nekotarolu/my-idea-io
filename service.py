@@ -1,6 +1,8 @@
-﻿import datetime
+﻿# -*- coding: utf-8 -*-
+import datetime
 import os
 import sqlite3
+import urllib.parse
 from bottle import route, request, abort, run, response, redirect, static_file, template, TEMPLATE_PATH
 
 import config
@@ -28,35 +30,34 @@ def welcome_service():
 
 @route("/start")
 def top_page():
-    test = "hogehoge"
-    return template("start.html", test=test)
+    return template("start.html")
 
 
 @route("/user_create", method=['POST'])
 def user_create():
     print("NAK::user create in")
-    userName = request.forms.get("userId")
-    print(userName)
+    userId = request.forms.userId
+    print(userId)
     now = datetime.datetime.now()
     nowStr = now.strftime('%Y%m%d%H%M%S')
     print(nowStr)
-    retVal = model.registUser(userName, nowStr)
+    retVal = model.registUser(userId, nowStr)
     if retVal is False:
-        redirect("/start?user=faild")
+        redirect("/start?user=failed")
     else:
-        redirect("/user?userId=" + userName)
+        redirect("/user?userId=" + urllib.parse.quote(userId))
 
 
 @route("/user_login", method=['POST'])
 def user_create():
     print("NAK::user create in")
-    userName = request.forms.get("userId")
-    print(userName)
-    retVal = model.getUserInfo(userName)
+    userId = request.forms.userId
+    print(userId)
+    retVal = model.getUserInfo(userId)
     if retVal is None:
-        redirect("/start?user=faild")
+        redirect("/start?user=failed")
     else:
-        redirect("/user?userId=" + userName)
+        redirect("/user?userId=" + urllib.parse.quote(userId))
 
 
 @route("/user")
@@ -66,7 +67,7 @@ def user_page():
     userInfo = model.getUserInfo(userId)
     if userInfo is None:
         print("userId is None...")
-        redirect("/start?user=faild")
+        redirect("/start?user=failed")
     else:
         inList = model.getInputData(userId)
         inputList = []
@@ -91,24 +92,24 @@ def user_page():
 def input_regist():
     userId = request.query.userId
     print(userId)
-    inputText = request.forms.get("inputText")
+    inputText = request.forms.inputText
     print(inputText)
     now = datetime.datetime.now()
     nowStr = now.strftime('%Y/%m/%d %H:%M.%S')
-    model.registInputData(userId, str(inputText), nowStr)
-    redirect("/user?userId=" + userId)
+    model.registInputData(userId, inputText, nowStr)
+    redirect("/user?userId=" + urllib.parse.quote(userId))
 
 
 @route("/output_regist", method=['POST'])
 def output_regist():
     userId = request.query.userId
     print(userId)
-    outputText = request.forms.get("outputText")
+    outputText = request.forms.outputText
     print(outputText)
     now = datetime.datetime.now()
     nowStr = now.strftime('%Y/%m/%d %H:%M.%S')
-    model.registOutputData(userId, str(outputText), nowStr)
-    redirect("/user?userId=" + userId)
+    model.registOutputData(userId, outputText, nowStr)
+    redirect("/user?userId=" + urllib.parse.quote(userId))
 
 
 @route("/input_delete/<target_text>")
@@ -116,7 +117,7 @@ def input_delete(target_text):
     userId = request.query.userId
     print(userId)
     print(target_text)
-    redirect("/user?userId=" + userId)
+    redirect("/user?userId=" + urllib.parse.quote(userId))
 
 
 @route("/output_delete/<target_text>")
@@ -124,7 +125,7 @@ def output_delete(target_text):
     userId = request.query.userId
     print(userId)
     print(target_text)
-    redirect("/user?userId=" + userId)
+    redirect("/user?userId=" + urllib.parse.quote(userId))
 
 @route("/files/<file_path:path>")
 def ret_files(file_path):
