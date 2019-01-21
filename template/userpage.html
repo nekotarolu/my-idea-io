@@ -20,35 +20,37 @@
 
     <h3>インプットリスト</h3>
     <table border="1">
-    %for input in inputList:
+        %for input in inputList:
         <tr>
+            <td>{{input["id"]}}</td>
             <td>{{input["inText"]}}</td>
             <td>{{input["createDate"]}}</td>
-            <td><a href="/input_delete/{{input["inText"]}}?userId={{userId}}">削除</a></td>
+            <td><a href="/input_delete/{{userId}}?id={{input["id"]}}">削除</a></td>
         </tr>
-    %end
+        %end
     </table>
     <h3>インプットを入力してください</h3>
     <form method="post" action="/input_regist/{{userId}}">
-      <p>インプット：<input type="text" name="inputText"></p>
-      <p><input type="submit" value="登録する"></p>
-    </form>  
-  
+        <p>インプット：<input type="text" name="inputText"></p>
+        <p><input type="submit" value="登録する"></p>
+    </form>
+
     <hr />
 
     <h3>アウトプットリスト</h3>
     <table border="1">
-    %for output in outputList:
+        %for output in outputList:
         <tr>
+            <td>{{output["id"]}}</td>
             <td>{{output["outText"]}}</td>
             <td>{{output["createDate"]}}</td>
-            <td><a href="/output_delete/{{output["outText"]}}?userId={{userId}}">削除</a></td>
+            <td><a href="/output_delete/{{userId}}?id={{output["id"]}}">削除</a></td>
         </tr>
-    %end
+        %end
     </table>
     <form method="post" action="/output_regist/{{userId}}">
-      <p>アウトプット：<input type="text" name="outputText"></p>
-      <p><input type="submit" value="登録する"></p>
+        <p>アウトプット：<input type="text" name="outputText"></p>
+        <p><input type="submit" value="登録する"></p>
     </form>
 
 </body>

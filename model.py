@@ -14,9 +14,9 @@ def init_db():
         connection.execute(
             "CREATE TABLE IF NOT EXISTS userInfo (userId TEXT PRIMARY KEY NOT NULL, createDate TEXT)")
         connection.execute(
-            "CREATE TABLE IF NOT EXISTS inputData (userId TEXT NOT NULL, inText TEXT NOT NULL, createDate TEXT, PRIMARY KEY(userId, inText))")
+            "CREATE TABLE IF NOT EXISTS inputData (id INTEGER PRIMARY KEY AUTOINCREMENT,  userId TEXT NOT NULL, inText TEXT NOT NULL UNIQUE, createDate TEXT)")
         connection.execute(
-            "CREATE TABLE IF NOT EXISTS outputData (userId TEXT NOT NULL, outText TEXT NOT NULL, createDate TEXT, PRIMARY KEY(userId, outText))")
+            "CREATE TABLE IF NOT EXISTS outputData (id INTEGER PRIMARY KEY AUTOINCREMENT, userId TEXT NOT NULL, outText TEXT NOT NULL UNIQUE, createDate TEXT)")
 
     except sqlite3.Error as e:
         ret = False
@@ -94,7 +94,7 @@ def getInputData(userId: str):
     try:
         coursor = connection.cursor()
         result = coursor.execute(
-            "SELECT inText, createDate FROM inputData WHERE userId ='" + userId + "'").fetchall()
+            "SELECT id, inText, createDate FROM inputData WHERE userId ='" + userId + "'").fetchall()
     except:
         result = None
         print("Error occurred:", sys.exc_info()[0])
@@ -116,7 +116,7 @@ def getOutputData(userId: str):
     try:
         coursor = connection.cursor()
         result = coursor.execute(
-            "SELECT outText, createDate FROM outputData WHERE userId ='" + userId + "'").fetchall()
+            "SELECT id, outText, createDate FROM outputData WHERE userId ='" + userId + "'").fetchall()
     except:
         result = None
         print("Error occurred:", sys.exc_info()[0])
@@ -186,4 +186,60 @@ def registOutputData(userId: str, inText: str ,createDate: str):
 
     print(ret)
     print("registOutputData out. ")
+    return ret
+
+
+def deleteInputData(userId: str, dataId: str):
+    print("deleteInputData in.")
+    ret = True
+
+    # DataBase init.
+    init_db()
+
+    infoTmp = getUserInfo(userId)
+    print(infoTmp)
+    if infoTmp is None:
+        ret = False
+    else:
+        connection = sqlite3.connect(config.DATABASE_LOCATION)
+        try:
+            coursor = connection.cursor()
+            connection.execute("DELETE FROM inputData WHERE id = " + dataId)
+            connection.commit()
+            ret = True
+        except:
+            ret = False
+            print("Error occurred:", sys.exc_info()[0])
+        connection.close()
+
+    print(ret)
+    print("deleteInputData out. ")
+    return ret
+
+
+def deleteOutputData(userId: str, dataId: str):
+    print("deleteOutputData in.")
+    ret = True
+
+    # DataBase init.
+    init_db()
+
+    infoTmp = getUserInfo(userId)
+    print(infoTmp)
+    if infoTmp is None:
+        ret = False
+    else:
+        connection = sqlite3.connect(config.DATABASE_LOCATION)
+        try:
+            coursor = connection.cursor()
+            connection.execute("DELETE FROM outputData WHERE id = " + dataId)
+            connection.commit()
+            ret = True
+        except:
+            ret = False
+            print("Error occurred:", sys.exc_info()[0])
+        connection.close()
+
+    print(ret)
+    print("deleteOutputData out. ")
     return ret

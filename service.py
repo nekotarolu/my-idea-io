@@ -78,16 +78,18 @@ def user_page(user_id):
         inputList = []
         for inData in inList:
             inputList.append({
-                "inText": inData[0],
-                "createDate": inData[1]
+                "id": inData[0],
+                "inText": inData[1],
+                "createDate": inData[2]
             })
 
         outList = model.getOutputData(userId)
         outputList = []
         for outData in outList:
             outputList.append({
-                "outText": outData[0],
-                "createDate": outData[1]
+                "id": outData[0],
+                "outText": outData[1],
+                "createDate": outData[2]
             })
 
         return template("userpage.html", userId=userInfo[0][0], inputList=inputList, outputList=outputList)
@@ -117,19 +119,23 @@ def output_regist(user_id):
     redirect("/user/" + urllib.parse.quote(userId))
 
 
-@route("/input_delete/<target_text>")
-def input_delete(target_text):
-    userId = request.query.userId
+@route("/input_delete/<user_id>")
+def input_delete(user_id):
+    userId = user_id
     print(userId)
-    print(target_text)
+    Id = request.query.id
+    print(Id)
+    model.deleteInputData(userId, Id)
     redirect("/user/" + urllib.parse.quote(userId))
 
 
-@route("/output_delete/<target_text>")
-def output_delete(target_text):
-    userId = request.query.userId
+@route("/output_delete/<user_id>")
+def output_delete(user_id):
+    userId = user_id
     print(userId)
-    print(target_text)
+    Id = request.query.id
+    print(Id)
+    model.deleteOutputData(userId, Id)
     redirect("/user/" + urllib.parse.quote(userId))
 
 @route("/files/<file_path:path>")
