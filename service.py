@@ -45,7 +45,7 @@ def user_create():
     if retVal is False:
         redirect("/start?user=failed")
     else:
-        redirect("/user?userId=" + urllib.parse.quote(userId))
+        redirect("/user/" + urllib.parse.quote(userId))
 
 
 @route("/user_login", method=['POST'])
@@ -57,12 +57,17 @@ def user_create():
     if retVal is None:
         redirect("/start?user=failed")
     else:
-        redirect("/user?userId=" + urllib.parse.quote(userId))
+        redirect("/user/" + urllib.parse.quote(userId))
 
 
 @route("/user")
-def user_page():
-    userId = request.query.userId
+def user_page_failed():
+    redirect("/start?user=failed")
+
+
+@route("/user/<user_id>")
+def user_page(user_id):
+    userId = user_id
     print(userId)
     userInfo = model.getUserInfo(userId)
     if userInfo is None:
@@ -88,28 +93,28 @@ def user_page():
         return template("userpage.html", userId=userInfo[0][0], inputList=inputList, outputList=outputList)
 
 
-@route("/input_regist", method=['POST'])
-def input_regist():
-    userId = request.query.userId
+@route("/input_regist/<user_id>", method=['POST'])
+def input_regist(user_id):
+    userId = user_id
     print(userId)
     inputText = request.forms.inputText
     print(inputText)
     now = datetime.datetime.now()
     nowStr = now.strftime('%Y/%m/%d %H:%M.%S')
     model.registInputData(userId, inputText, nowStr)
-    redirect("/user?userId=" + urllib.parse.quote(userId))
+    redirect("/user/" + urllib.parse.quote(userId))
 
 
-@route("/output_regist", method=['POST'])
-def output_regist():
-    userId = request.query.userId
+@route("/output_regist/<user_id>", method=['POST'])
+def output_regist(user_id):
+    userId = user_id
     print(userId)
     outputText = request.forms.outputText
     print(outputText)
     now = datetime.datetime.now()
     nowStr = now.strftime('%Y/%m/%d %H:%M.%S')
     model.registOutputData(userId, outputText, nowStr)
-    redirect("/user?userId=" + urllib.parse.quote(userId))
+    redirect("/user/" + urllib.parse.quote(userId))
 
 
 @route("/input_delete/<target_text>")
@@ -117,7 +122,7 @@ def input_delete(target_text):
     userId = request.query.userId
     print(userId)
     print(target_text)
-    redirect("/user?userId=" + urllib.parse.quote(userId))
+    redirect("/user/" + urllib.parse.quote(userId))
 
 
 @route("/output_delete/<target_text>")
@@ -125,7 +130,7 @@ def output_delete(target_text):
     userId = request.query.userId
     print(userId)
     print(target_text)
-    redirect("/user?userId=" + urllib.parse.quote(userId))
+    redirect("/user/" + urllib.parse.quote(userId))
 
 @route("/files/<file_path:path>")
 def ret_files(file_path):
