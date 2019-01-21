@@ -14,9 +14,9 @@ def init_db():
         connection.execute(
             "CREATE TABLE IF NOT EXISTS userInfo (userId TEXT PRIMARY KEY NOT NULL, createDate TEXT)")
         connection.execute(
-            "CREATE TABLE IF NOT EXISTS inputData (userKey TEXT NOT NULL, inText TEXT NOT NULL, createDate TEXT, PRIMARY KEY(userKey, inText))")
+            "CREATE TABLE IF NOT EXISTS inputData (userId TEXT NOT NULL, inText TEXT NOT NULL, createDate TEXT, PRIMARY KEY(userId, inText))")
         connection.execute(
-            "CREATE TABLE IF NOT EXISTS outputData (userKey TEXT NOT NULL, outText TEXT NOT NULL, createDate TEXT, PRIMARY KEY(userKey, outText))")
+            "CREATE TABLE IF NOT EXISTS outputData (userId TEXT NOT NULL, outText TEXT NOT NULL, createDate TEXT, PRIMARY KEY(userId, outText))")
 
     except sqlite3.Error as e:
         ret = False
@@ -94,7 +94,7 @@ def getInputData(userId: str):
     try:
         coursor = connection.cursor()
         result = coursor.execute(
-            "SELECT inText, createDate FROM inputData WHERE userKey ='" + userId + "'").fetchall()
+            "SELECT inText, createDate FROM inputData WHERE userId ='" + userId + "'").fetchall()
     except:
         result = None
         print("Error occurred:", sys.exc_info()[0])
@@ -116,7 +116,7 @@ def getOutputData(userId: str):
     try:
         coursor = connection.cursor()
         result = coursor.execute(
-            "SELECT outText, createDate FROM outputData WHERE userKey ='" + userId + "'").fetchall()
+            "SELECT outText, createDate FROM outputData WHERE userId ='" + userId + "'").fetchall()
     except:
         result = None
         print("Error occurred:", sys.exc_info()[0])
@@ -142,7 +142,7 @@ def registInputData(userId: str, inText: str ,createDate: str):
         connection = sqlite3.connect(config.DATABASE_LOCATION)
         try:
             coursor = connection.cursor()
-            insert_sql = "INSERT INTO inputData (userKey, inText, createDate) VALUES (?, ?, ?)"
+            insert_sql = "INSERT INTO inputData (userId, inText, createDate) VALUES (?, ?, ?)"
 
             insert_prm = (userId, inText, createDate)
             coursor.execute(insert_sql, insert_prm)
@@ -173,7 +173,7 @@ def registOutputData(userId: str, inText: str ,createDate: str):
         connection = sqlite3.connect(config.DATABASE_LOCATION)
         try:
             coursor = connection.cursor()
-            insert_sql = "INSERT INTO outputData (userKey, outText, createDate) VALUES (?, ?, ?)"
+            insert_sql = "INSERT INTO outputData (userId, outText, createDate) VALUES (?, ?, ?)"
 
             insert_prm = (userId, inText, createDate)
             coursor.execute(insert_sql, insert_prm)
